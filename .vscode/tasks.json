@@ -10,6 +10,10 @@
 		{
 			"taskName": "test",
 			"isTestCommand": true
+		},
+		{
+			"taskName": "build",
+			"isBuildCommand": true
 		}
 	]
 }

@@ -1,15 +1,28 @@
+#pragma once
 #include <string>
+#include <iostream>
+#include <cstdio>
 using namespace std;
 
 class File {
   private:
+    string content;
+  protected:
     string name;
     int size;
-    string content;
-    
+    int type;
+    File* nextSibling;
+
   public:
-    string getName ();
-    void setName (const string name);
-    int getSize ();
-    string getContent ();
+    File();
+    File(const string, const string);
+    ~File();
+    string getName();
+    void setName(const string);
+    int getSize();
+    string getContent();
+    File* next();
+    File* cloneNode();
+    void setNext(File*);
+    bool isDir();
 };

@@ -1,13 +1,25 @@
 #define CATCH_CONFIG_MAIN
+#include <unordered_map>
+#include "FileSystem.h"
 #include "../lib/catch.hpp"
 
-unsigned int Factorial( unsigned int number ) {
-    return number <= 1 ? number : Factorial(number-1)*number;
-}
-
-TEST_CASE( "Factorials are computed", "[factorial]" ) {
-    REQUIRE( Factorial(1) == 1 );
-    REQUIRE( Factorial(2) == 2 );
-    REQUIRE( Factorial(3) == 6 );
-    REQUIRE( Factorial(10) == 3628800 );
+SCENARIO( "mkdir touch", "") {
+  auto fs = new FileSystem();
+  GIVEN( "A series of file or dir name" ) {
+    WHEN( "Created") {
+      fs->makeFile("a.txt");
+      fs->makeDir("src");
+      fs->makeDir("out");
+      fs->makeFile("b.out");
+      REQUIRE(fs->getCurrentDir()->getSize() == 4);
+      unordered_map<string, bool> m;
+      fs->getCurrentDir()->forEach([&m](File* p) -> void {
+        m[p->getName()] = p->isDir();
+      });
+      REQUIRE(m["a.txt"] == 0);
+      REQUIRE(m["src"] == 1);
+      REQUIRE(m["out"] == 1);
+      REQUIRE(m["b.out"] == 0);
+    }
+  }
 }

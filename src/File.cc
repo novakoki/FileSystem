@@ -1,17 +1,46 @@
 #include "File.h"
 
-string File::getName () {
+File::File() {
+  
+}
+
+File::File(const string name, const string content) {
+  this->name = name;
+  this->content = content;
+  this->type = 0;
+}
+
+void File::setNext(File* pNextNode) {
+  this->nextSibling = pNextNode;
+}
+
+string File::getName() {
   return this->name;
 }
 
-void File::setName (const string name) {
+void File::setName(const string name) {
   this->name = name;
 }
 
-int File::getSize () {
+int File::getSize() {
   return this->size;
 }
 
-string File::getContent () {
+string File::getContent() {
   return this->content;
+}
+
+File* File::next() {
+  return this->nextSibling;
+}
+
+bool File::isDir() {
+  if (this->type == 1) {
+    return true;
+  }
+  return false;
+}
+
+File::~File() {
+  
 }
