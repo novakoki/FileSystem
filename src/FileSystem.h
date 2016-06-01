@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <sstream>
 #include "File.h"
 #include "Dir.h"
 
@@ -11,10 +13,10 @@ class FileSystem {
     FileSystem();
     ~FileSystem();
 
-    File* getFileByName(const string);
-    Dir* getDirByName(const string);
     void route(const string);
+    static const vector<string> parse(const string);
     Dir* getCurrentDir();
+    File* getElementByPath(const string);
 
     void switchToDir(const string);
     void listDir(const string);

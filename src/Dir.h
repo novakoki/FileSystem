@@ -12,6 +12,11 @@ class Dir:public File {
     Dir(const string);
     ~Dir();
     void appendChild(File*);
+    void setParent(Dir*);
     Dir* cloneNode();
+    Dir* parent();
+    File* first();
+    File* last();
     void forEach(function<void(File*)>);
+    File* getElementByName(const string);
 };

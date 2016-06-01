@@ -7,6 +7,7 @@ File::File() {
 File::File(const string name, const string content) {
   this->name = name;
   this->content = content;
+  this->size = content.length();
   this->type = 0;
 }
 
@@ -39,6 +40,11 @@ bool File::isDir() {
     return true;
   }
   return false;
+}
+
+File* File::cloneNode() {
+  File* newNode = new File(this->name, this->content);
+  return newNode;
 }
 
 File::~File() {
