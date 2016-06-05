@@ -13,21 +13,22 @@ class FileSystem {
     FileSystem();
     ~FileSystem();
 
-    void route(const string);
-    static const vector<string> parse(const string);
+    void route(const string&);
+    static const vector<string> parse(const string&);
     Dir* getCurrentDir();
-    File* getElementByPath(const string);
+    File* getElementByPath(const vector<string>&);
 
-    void switchToDir(const string);
-    void listDir(const string);
-    void copyDir(const string, const string);
-    void removeDir(const string);
-    void makeDir(const string);
+    void switchToDir(const string&);
+    void listDir(const string&);
+    Dir* copyDir(const string&, const string&);
+    Dir* removeDir(const string&);
+    Dir* makeDir(const string&);
+    Dir* makeDir(const string&, Dir*);
 
-    void makeFile(const string);
-    void removeFile(const string);
-    void editFile(const string);
-    void readFile(const string);
-    void copyFile(const string, const string);
+    void makeFile(const string&);
+    void removeFile(const string&);
+    void editFile(const string&);
+    void readFile(const string&);
+    void copyFile(const string&, const string&);
 
 };

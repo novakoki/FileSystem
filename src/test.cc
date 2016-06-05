@@ -8,14 +8,14 @@ SCENARIO("Parse a path", "") {
     string path = "/home/ziqi/FileSystem/src/Dir.c/";
     WHEN("Path parsed") {
       auto elems = FileSystem::parse(path);
-      REQUIRE(elems.size() == 7);
+      REQUIRE(elems.size() == 6);
       REQUIRE(elems[0] == "");
       REQUIRE(elems[1] == "home");
       REQUIRE(elems[2] == "ziqi");
       REQUIRE(elems[3] == "FileSystem");
       REQUIRE(elems[4] == "src");
       REQUIRE(elems[5] == "Dir.c");
-      REQUIRE(elems[6] == "");
+      //REQUIRE(elems[6] == "");
     }
   }
 }
@@ -56,30 +56,30 @@ SCENARIO("Dir test", "") {
   }
 }
 
-SCENARIO( "mkdir touch", "") {
+SCENARIO( "mkdir", "") {
   auto fs = new FileSystem();
-  GIVEN( "A series of file or dir name" ) {
-    WHEN( "Created") {
-      fs->makeFile("a.txt");
-      fs->makeDir("src");
-      fs->makeDir("out");
-      fs->makeFile("b.out");
-      REQUIRE(fs->getCurrentDir()->getSize() == 4);
-      unordered_map<string, bool> m;
-      fs->getCurrentDir()->forEach([&m](File* p) -> void {
-        m[p->getName()] = p->isDir();
-      });
-      REQUIRE(m["a.txt"] == 0);
-      REQUIRE(m["src"] == 1);
-      REQUIRE(m["out"] == 1);
-      REQUIRE(m["b.out"] == 0);
-      THEN("Find dir or file by path") {
-        auto elem = fs->getElementByPath("/a.txt");
-        REQUIRE(elem->getName() == "a.txt");
-        static_cast<Dir*>(fs->getElementByPath("src"))->appendChild(new File("file.c",""));
-        REQUIRE(fs->getElementByPath("/../../src/file.c")->getName() == "file.c");
-        REQUIRE(fs->getElementByPath("../src/file.c/") == NULL);
-      }
-    }
+  unordered_map<string, bool> m;
+  WHEN( "Created at current dir") {
+    fs->makeDir("src");
+    fs->makeDir("out");
+    REQUIRE(fs->getCurrentDir()->getSize() == 2);
+    fs->getCurrentDir()->forEach([&m](File* p) -> void {
+      m[p->getName()] = p->isDir();
+    });
+    REQUIRE(m["src"] == 1);
+    REQUIRE(m["out"] == 1);
+  }
+  WHEN("Created by absolute dir") {
+    REQUIRE(fs->makeDir("src/headers") == NULL);
+    auto src = fs->makeDir("/src/");
+    REQUIRE(src != NULL);
+    REQUIRE(src->getName() == "src");
+    auto headers = fs->makeDir("/src/headers/");
+    REQUIRE(headers != NULL);
+    REQUIRE(headers->getName() == "headers");
+    src->forEach([&m](File* p) -> void {
+      m[p->getName()] = p->isDir();
+    });
+    REQUIRE(m["headers"] == 1);
   }
 }
