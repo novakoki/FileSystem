@@ -16,6 +16,7 @@ class FileSystem {
     void route(const string&);
     static const vector<string> parse(const string&);
     Dir* getCurrentDir();
+    Dir* getRootDir();
     File* getElementByPath(const vector<string>&);
 
     void switchToDir(const string&);

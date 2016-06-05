@@ -10,6 +10,10 @@ FileSystem::~FileSystem() {
   
 }
 
+Dir* FileSystem::getRootDir() {
+  return this->rootDir;
+}
+
 Dir* FileSystem::getCurrentDir() {
   return this->currentDir;
 }
@@ -90,7 +94,7 @@ void FileSystem::switchToDir(const string& path) {
       printf("%s is a file!!!\n", (*elems.rbegin()).c_str());
     }
   } else {
-    printf("Path is not valid!!!\n");
+    printf("Path is not valid!!! %s\n", path.c_str());
   }
 }
 
@@ -108,7 +112,7 @@ Dir* FileSystem::makeDir(const string& path) {
   if (parentDir != NULL) {
     return makeDir(dirName, parentDir);
   } else {
-    printf("Path is not valid!!!\n");
+    printf("Path is not valid!!! %s\n", path.c_str());
     return NULL;
   }
 }

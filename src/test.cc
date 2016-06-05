@@ -3,10 +3,10 @@
 #include "FileSystem.h"
 #include "../lib/catch.hpp"
 
-SCENARIO("Parse a path", "") {
-  GIVEN("A path") {
+SCENARIO ("Parse a path", "") {
+  GIVEN ("A path") {
     string path = "/home/ziqi/FileSystem/src/Dir.c/";
-    WHEN("Path parsed") {
+    WHEN ("Path parsed") {
       auto elems = FileSystem::parse(path);
       REQUIRE(elems.size() == 6);
       REQUIRE(elems[0] == "");
@@ -20,11 +20,11 @@ SCENARIO("Parse a path", "") {
   }
 }
 
-SCENARIO("Dir test", "") {
-  GIVEN("An instance of Dir") {
+SCENARIO ("Dir test", "") {
+  GIVEN ("An instance of Dir") {
     auto dir = new Dir("/");
     unordered_map<string, bool> m;
-    WHEN("Append some children") {
+    WHEN ("Append some children") {
       dir->appendChild(new File("a.txt", "Hello, world"));
       dir->appendChild(new Dir("src"));
       dir->appendChild(new Dir("out"));
@@ -40,7 +40,7 @@ SCENARIO("Dir test", "") {
       REQUIRE(m["out"] == 1);
       REQUIRE(m["b.out"] == 0);
 
-      THEN("Find dir or file by name") {
+      THEN ("Find dir or file by name") {
         auto elem = dir->getElementByName("a.txt");
         REQUIRE(elem->getName() == "a.txt");
         REQUIRE(elem->getContent() == "Hello, world");
@@ -56,10 +56,10 @@ SCENARIO("Dir test", "") {
   }
 }
 
-SCENARIO( "mkdir", "") {
+SCENARIO ("mkdir", "") {
   auto fs = new FileSystem();
   unordered_map<string, bool> m;
-  WHEN( "Created at current dir") {
+  WHEN ( "Created at current dir") {
     fs->makeDir("src");
     fs->makeDir("out");
     REQUIRE(fs->getCurrentDir()->getSize() == 2);
@@ -69,7 +69,7 @@ SCENARIO( "mkdir", "") {
     REQUIRE(m["src"] == 1);
     REQUIRE(m["out"] == 1);
   }
-  WHEN("Created by absolute dir") {
+  WHEN ("Created by absolute dir") {
     REQUIRE(fs->makeDir("src/headers") == NULL);
     auto src = fs->makeDir("/src/");
     REQUIRE(src != NULL);
@@ -81,5 +81,32 @@ SCENARIO( "mkdir", "") {
       m[p->getName()] = p->isDir();
     });
     REQUIRE(m["headers"] == 1);
+  }
+}
+
+SCENARIO ("Switch to some dir", "mkdir") {
+  GIVEN ("Dirs") {
+    auto fs = new FileSystem();
+    auto src = fs->makeDir("src");
+    auto out = fs->makeDir("src/out/");
+    WHEN ("Switch to relative path") {
+      fs->switchToDir("src");
+      REQUIRE(fs->getCurrentDir() == src);
+      fs->switchToDir("out");
+      REQUIRE(fs->getCurrentDir() == out);
+      THEN ("Switch to parent") {
+        fs->switchToDir("..");
+        REQUIRE(fs->getCurrentDir() == src);
+        fs->switchToDir("../");
+        REQUIRE(fs->getCurrentDir() == fs->getRootDir());
+      }
+    }
+    WHEN ("Switch to absolute path") {
+      fs->switchToDir("/src/out/");
+      REQUIRE(fs->getCurrentDir() == out);
+      fs->switchToDir("..");
+      fs->switchToDir("/src/out");
+      REQUIRE(fs->getCurrentDir() == out);
+    }
   }
 }
