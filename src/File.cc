@@ -15,6 +15,10 @@ void File::setNext(File* pNextNode) {
   this->nextSibling = pNextNode;
 }
 
+void File::setPrev(File* pPrevNode) {
+  this->previousSibling = pPrevNode;
+}
+
 string File::getName() {
   return this->name;
 }
@@ -33,6 +37,10 @@ string File::getContent() {
 
 File* File::next() {
   return this->nextSibling;
+}
+
+File* File::prev() {
+  return this->previousSibling;
 }
 
 bool File::isDir() {

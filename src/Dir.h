@@ -11,9 +11,11 @@ class Dir:public File {
   public:
     Dir(const string);
     ~Dir();
-    void appendChild(File*);
+    string getAbsolutePath();
+    File* appendChild(File*);
+    void removeChild(File*);
     void setParent(Dir*);
-    Dir* cloneNode();
+    virtual Dir* cloneNode();
     Dir* parent();
     File* first();
     File* last();

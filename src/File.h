@@ -12,6 +12,7 @@ class File {
     int size;
     int type;
     File* nextSibling;
+    File* previousSibling;
 
   public:
     File();
@@ -22,7 +23,9 @@ class File {
     int getSize();
     string getContent();
     File* next();
-    File* cloneNode();
+    File* prev();
+    virtual File* cloneNode();
     void setNext(File*);
+    void setPrev(File*);
     bool isDir();
 };

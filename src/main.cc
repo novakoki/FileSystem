@@ -4,10 +4,10 @@
 int main () {
   auto fs = new FileSystem();
   string cmd = "";
-  cout<<"ziqi@Ziqi:~$ ";
+  cout<<"ziqi@Ziqi:/$ ";
   while(getline(cin, cmd)) {
     fs->route(cmd);
-    cout<<"ziqi@Ziqi:"<<fs->getCurrentDir()<<"$ ";
+    cout<<"ziqi@Ziqi:"<<fs->getCurrentDir()->getAbsolutePath()<<"$ ";
   }
   return 0;
 }

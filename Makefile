@@ -3,7 +3,7 @@ vpath %.h ./src
 vpath %.o ./out
 vpath % ./out
 vpath %.hpp ./lib
-CC= clang++ -std=c++11
+CC= g++ -std=c++11 -g
 
 .PHONY: build rebuild run test clean
 build: fs

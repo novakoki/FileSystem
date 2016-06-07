@@ -13,6 +13,17 @@ void Dir::setParent(Dir* parentNode) {
   this->parentNode = parentNode;
 }
 
+string Dir::getAbsolutePath() {
+  string path = "";
+  if (this == this->parent()) {
+    return "/";
+  }
+  for (auto p = this; p != p->parent(); p = p->parent()) {
+    path = "/"+p->getName()+path;
+  }
+  return path;
+}
+
 Dir* Dir::parent() {
   return this->parentNode;
 }
@@ -34,8 +45,9 @@ File* Dir::getElementByName(const string name) {
   return NULL;
 }
 
-void Dir::appendChild(File* pNewNode) {
+File* Dir::appendChild(File* pNewNode) {
   pNewNode->setNext(NULL);
+  pNewNode->setPrev(this->lastChild);
   if (pNewNode->isDir()) {
     static_cast<Dir*>(pNewNode)->parentNode = this;
   }
@@ -46,6 +58,34 @@ void Dir::appendChild(File* pNewNode) {
   }
   this->lastChild = pNewNode;
   this->size++;
+  return pNewNode;
+}
+
+void Dir::removeChild(File* pNode) {
+  if (pNode == firstChild) {
+    if (pNode == lastChild) {
+      firstChild = NULL;
+      lastChild = NULL;
+    } else {
+      pNode->next()->setPrev(pNode->prev());
+      firstChild = pNode->next();
+    }
+  } else if (pNode == lastChild) {
+    pNode->prev()->setNext(pNode->next());
+    lastChild = pNode->prev();
+  } else {
+    pNode->prev()->setNext(pNode->next());
+    pNode->next()->setPrev(pNode->prev());
+  }
+  this->size--;
+  if (pNode->isDir()) {
+    Dir* dir = static_cast<Dir*>(pNode);
+    dir->forEach([&dir](File* p) -> void {
+      dir->removeChild(p);
+    });
+  }
+  
+  delete pNode;
 }
 
 void Dir::forEach(function<void(File*)> callback) {
