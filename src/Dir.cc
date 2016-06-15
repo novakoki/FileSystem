@@ -101,3 +101,13 @@ Dir* Dir::cloneNode() {
   });
   return newNode;
 }
+
+bool Dir::contains(Dir* pNode) {
+  while (pNode != pNode->parent()) {
+    if (pNode == this) {
+      return true;
+    }
+    pNode = pNode->parent();
+  }
+  return false;
+}

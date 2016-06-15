@@ -188,9 +188,6 @@ SCENARIO ("rm cp", "mkdir touch") {
     fs->getCurrentDir()->forEach([&m](File* p) -> void {
       m[p->getName()] = p->isDir();
     });
-    for (auto item : m) {
-      cout<<item.first<<endl;
-    }
     REQUIRE(m["headers"] == 1);
     fs->switchToDir("headers");
     m.clear();

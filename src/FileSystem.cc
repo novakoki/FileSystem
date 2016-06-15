@@ -4,9 +4,7 @@ FileSystem::FileSystem() {
   this->rootDir = new Dir("/");
   rootDir->setParent(rootDir);
   this->currentDir = this->rootDir;
-  helpMessage = "usage: command [path1] [path2]\n\nThe most commonly used commands are:\ncd      Switch to some directory\ncp      Copy and paste\nls      List directory's content\nmkdir   Create a directory\nmv      Move/Rename a file or directory\nrm      Remove a file or directory\ntouch   Create a file\n";
-  system("clear");
-  cout<<helpMessage<<endl;
+  helpMessage = "usage: <command> [path1] [path2]\n\nThe most commonly used commands are:\ncat     Display content of some file\ncd      Switch to some directory\ncp      Copy and paste\necho    Write content to some file\nexit    Back to terminal\nhelp    Display this guide\nls      List directory's content\nmkdir   Create a directory\nmv      Move/Rename a file or directory\nrm      Remove a file or directory\ntouch   Create a file\n\n\"help <command>\" show specifical guides\n";
 }
 
 FileSystem::~FileSystem() {
@@ -32,13 +30,13 @@ void FileSystem::route(const string& cmd) {
   
   if (op == "cd") {
     if (length > 2) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else if (length == 2) {
       switchToDir(elems[1]);
     }
   } else if (op == "ls") {
     if (length > 2) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else if (length == 1) {
       listDir("");
     } else {
@@ -46,38 +44,58 @@ void FileSystem::route(const string& cmd) {
     }
   } else if (op == "touch") {
     if (length != 2) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else {
       makeFile(elems[1]);
     }
   } else if (op == "mkdir") {
     if (length != 2) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else {
       makeDir(elems[1]);
     }
   } else if (op == "rm") {
     if (length != 2) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else {
       remove(elems[1]);
     }
   } else if (op == "cp") {
     if (length != 3) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else {
       copy(elems[1], elems[2]);
     }
   } else if (op == "mv") {
     if (length != 3) {
-      
+      cout<<"Invalid arguments!!!"<<endl;
     } else {
       move(elems[1], elems[2]);
+    }
+  } else if (op == "cat") {
+    if (length != 2) {
+      cout<<"Invalid arguments!!!"<<endl;
+    } else {
+      readFile(elems[1]);
+    }
+  } else if (op == "echo") {
+    if (length != 3) {
+      cout<<"Invalid arguments!!!"<<endl;
+    } else {
+      writeFile(elems[1], elems[2]);
     }
   } else if (op == "exit") {
     exit(0);
   } else if (op == "help") {
-    cout<<helpMessage<<endl;
+    if (length == 1) {
+      cout<<helpMessage<<endl;
+    } else if (length == 2) {
+      
+    } else {
+      cout<<"Invalid arguments!!!"<<endl;
+    }
+  } else {
+    cout<<"Invalid command!!!"<<endl;
   }
   
   return;
@@ -249,11 +267,15 @@ File* FileSystem::copy(const string& srcPath, const string& dstPath) {
   File* node = NULL;
   auto src = getElementByPath(parse(srcPath));
   if (src != NULL) {
-    getParentDirByPath(parse(dstPath), [&node, src](const string& dstName, Dir* parentDir) -> void {
+    getParentDirByPath(parse(dstPath), [&node, src, srcPath, dstPath](const string& dstName, Dir* parentDir) -> void {
       if (parentDir->getElementByName(dstName) == NULL) {
-        node = src->cloneNode();
-        node->setName(dstName);
-        parentDir->appendChild(node);
+        if (src->isDir() && static_cast<Dir*>(src)->contains(parentDir)) {
+          printf("%s is child of %s\n", dstPath.c_str(), srcPath.c_str());
+        } else {
+          node = src->cloneNode();
+          node->setName(dstName);
+          parentDir->appendChild(node);
+        }
       } else {
         printf("%s exists!!!\n", dstName.c_str());
       }
@@ -285,4 +307,26 @@ File* FileSystem::move(const string& srcPath, const string& dstPath) {
   auto dst = copy(srcPath, dstPath);
   remove(srcPath);
   return dst;
+}
+
+void FileSystem::readFile(const string& filePath) {
+  auto file = getElementByPath(parse(filePath));
+  if (file == NULL) {
+    printf("%s not exists!!!\n", filePath.c_str());
+  } else if (file->isDir()) {
+    printf("%s is a directory!!!\n", filePath.c_str());
+  } else {
+    cout<<file->getContent()<<endl;
+  }
+}
+
+void FileSystem::writeFile(const string& filePath, const string& content) {
+  auto file = getElementByPath(parse(filePath));
+  if (file == NULL) {
+    printf("%s not exists!!!\n", filePath.c_str());
+  } else if (file->isDir()) {
+    printf("%s is a directory!!!\n", filePath.c_str());
+  } else {
+    file->setContent(content);
+  }
 }

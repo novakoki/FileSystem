@@ -16,6 +16,7 @@ class Dir:public File {
     void removeChild(File*);
     void setParent(Dir*);
     virtual Dir* cloneNode();
+    bool contains(Dir*);
     Dir* parent();
     File* first();
     File* last();

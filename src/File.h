@@ -22,6 +22,7 @@ class File {
     void setName(const string);
     int getSize();
     string getContent();
+    void setContent(const string&);
     File* next();
     File* prev();
     virtual File* cloneNode();

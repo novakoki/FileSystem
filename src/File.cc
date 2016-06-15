@@ -35,6 +35,10 @@ string File::getContent() {
   return this->content;
 }
 
+void File::setContent(const string& content) {
+  this->content = content;
+}
+
 File* File::next() {
   return this->nextSibling;
 }
