@@ -293,10 +293,14 @@ void FileSystem::remove(const string& path) {
     return;
   }
   
-  getParentDirByPath(parse(path), [](const string& name, Dir* parentDir) -> void {
+  getParentDirByPath(parse(path), [this](const string& name, Dir* parentDir) -> void {
     auto elem = parentDir->getElementByName(name);
     if (elem != NULL) {
-      parentDir->removeChild(elem);
+      if (elem->isDir() && static_cast<Dir*>(elem)->contains(this->currentDir)) {
+        printf("Can't remove parent directory!!!\n");
+      } else {
+        parentDir->removeChild(elem);
+      }
     } else {
       printf("%s not exists!!!\n", name.c_str());
     }
@@ -305,7 +309,9 @@ void FileSystem::remove(const string& path) {
 
 File* FileSystem::move(const string& srcPath, const string& dstPath) {
   auto dst = copy(srcPath, dstPath);
-  remove(srcPath);
+  if (dst != NULL) {
+    remove(srcPath);
+  }
   return dst;
 }
 
