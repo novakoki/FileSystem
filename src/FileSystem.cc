@@ -90,7 +90,27 @@ void FileSystem::route(const string& cmd) {
     if (length == 1) {
       cout<<helpMessage<<endl;
     } else if (length == 2) {
-      
+      if (elems[1] == "cat") {
+        cout<<"cat [filename]"<<endl;
+      } else if (elems[1] == "cd") {
+        cout<<"cd [path]"<<endl;
+      } else if (elems[1] == "cp") {
+        cout<<"cp [source] [destination]"<<endl;
+      } else if (elems[1] == "echo") {
+        cout<<"echo [filename]: override content"<<endl;
+      } else if (elems[1] == "ls") {
+        cout<<"ls [path]"<<endl;
+      } else if (elems[1] == "mv") {
+        cout<<"mv [source] [destination]"<<endl;
+      } else if (elems[1] == "mkdir") {
+        cout<<"mkdir [directory name]"<<endl;
+      } else if (elems[1] == "rm") {
+        cout<<"rm [target]"<<endl;
+      } else if (elems[1] == "touch") {
+        cout<<"touch [filename]"<<endl;
+      } else {
+        cout<<"No help for "<<elems[1]<<endl;
+      }
     } else {
       cout<<"Invalid arguments!!!"<<endl;
     }
